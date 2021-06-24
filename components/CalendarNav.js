@@ -5,12 +5,14 @@ import { useDrag } from 'react-use-gesture';
 import {
   Animated,
   PanResponder,
+  Easing,
   Text,
   View,
   StyleSheet,
   Button,
   SafeAreaView
 } from 'react-native';
+import WeekView from './WeekView';
 
 class CalendarNav extends Component {
   componentWillMount() {
@@ -46,7 +48,8 @@ class CalendarNav extends Component {
         if (dy > 0 && Math.abs(dy) < 200) {
           Animated.timing(this.animatedValue, {
             duration,
-            toValue: startValue
+            toValue: startValue,
+            easing: Easing.in(Easing.elastic(1))
           }).start();
         } else {
           //render calendar
@@ -73,7 +76,7 @@ class CalendarNav extends Component {
         {...this.panResponder.panHandlers}
         style={[styles.container, animatedStyle]}
       >
-        <Text>This will be the pull downnnn</Text>
+        <WeekView />
       </Animated.View>
     );
   }
@@ -83,7 +86,8 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'pink',
     alignItems: 'center',
-    height: '100'
+    height: '100',
+    width: '100%'
   }
 });
 
