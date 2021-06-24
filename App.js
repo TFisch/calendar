@@ -1,15 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import CalendarNav from './components/CalendarNav';
+import Calendar from './views/Calendar';
+import Nav from './components/Nav';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <View style={styles.drag}>
-        <Text style={styles.dragText}>Drag me down</Text>
-      </View>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Nav />
+      <CalendarNav />
+      <Calendar />
     </View>
   );
 }
@@ -19,16 +19,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'pink',
     alignItems: 'center'
-  },
-  drag: {
-    backgroundColor: '#000',
-    color: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    height: 100
-  },
-  dragText: {
-    color: 'white'
   }
 });
