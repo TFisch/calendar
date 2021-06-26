@@ -13,6 +13,7 @@ import {
   SafeAreaView
 } from 'react-native';
 import WeekView from './WeekView';
+import MonthSelect from './MonthSelect';
 
 class CalendarNav extends Component {
   componentWillMount() {
@@ -76,6 +77,7 @@ class CalendarNav extends Component {
         {...this.panResponder.panHandlers}
         style={[styles.container, animatedStyle]}
       >
+        <MonthSelect />
         <WeekView />
       </Animated.View>
     );
@@ -84,9 +86,9 @@ class CalendarNav extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'pink',
+    backgroundColor: 'green',
     alignItems: 'center',
-    height: '100',
+    height: '100px',
     width: '100%'
   }
 });
