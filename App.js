@@ -1,31 +1,48 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import CalendarNav from './components/CalendarNav';
+import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import CalendarNav from './components/CalendarNav/CalendarNav';
 import Calendar from './views/Calendar';
-import Nav from './components/Nav';
+import Nav from './components/Nav/Nav';
 import { useFonts } from 'expo-font';
+import * as Font from 'expo-font';
+const { height } = Dimensions.get('window');
 
-export default function App() {
-  let [fontsLoaded] = useFonts({
-    'Public Sans': require('./assets/fonts/PublicSans-Regular.ttf')
-  });
+let customFonts = {
+  'Public Sans': require('./assets/fonts/PublicSans-Regular.ttf'),
+  Archivo: require('./assets/fonts/ArchivoBlack-Regular.ttf'),
+  'Roboto-Medium': require('./assets/fonts/Roboto-Medium.ttf')
+};
 
-  if (!fontsLoaded) {
-    return (
-      <View style={styles.container}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  } else {
-    return (
-      <View style={styles.container}>
-        <Nav />
-        <CalendarNav />
-        <Calendar />
-        <Text style={styles.test}>Test if works</Text>
-        <Text>Test if works</Text>
-      </View>
-    );
+export default class App extends React.Component {
+  state = {
+    fontsLoaded: false
+  };
+
+  async _loadFontsAsync() {
+    await Font.loadAsync(customFonts);
+    this.setState({ fontsLoaded: true });
+  }
+
+  componentDidMount() {
+    this._loadFontsAsync();
+  }
+
+  render() {
+    if (this.state.fontsLoaded) {
+      return (
+        <View style={styles.container}>
+          <Nav />
+          <CalendarNav />
+          <Calendar />
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          <Text>Loading...</Text>
+        </View>
+      );
+    }
   }
 }
 
@@ -33,9 +50,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'pink',
-    alignItems: 'center'
+    alignItems: 'center',
+    height
   },
   test: {
-    fontFamily: 'Public Sans'
+    fontFamily: 'Archivo',
+    color: 'orange'
   }
 });

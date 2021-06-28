@@ -5,6 +5,10 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "packagerOpts": {
+      "config": "metro.config.js",
+      "sourceExts": ["js", "jsx", "scss", "sass"]
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

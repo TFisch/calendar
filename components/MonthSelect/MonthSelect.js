@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 export default function MonthSelect() {
   return (
     <View style={styles.container}>
-      <Text>October</Text>
+      <Text style={styles.month}>October</Text>
     </View>
   );
 }
@@ -14,8 +14,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     width: '100%',
-    paddingLeft: '10px',
-    paddingRight: '40px',
-    backgroundColor: 'purple'
+    paddingLeft: '10pt',
+    paddingRight: '10pt',
+    paddingTop: '20pt',
+    paddingBottom: '20pt'
   }
 });

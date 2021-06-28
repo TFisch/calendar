@@ -41,14 +41,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    paddingLeft: '10px',
-    paddingRight: '10px'
+    paddingLeft: '10pt',
+    paddingRight: '10pt'
   },
   weekDayBlock: {},
   weekDayCopy: {
-    paddingBottom: '10px'
+    paddingBottom: '10pt',
+    fontFamily: 'Roboto-Medium',
+    color: '#BEC4C8'
   },
   weekDateNumCopy: {
-    textAlign: 'center'
+    textAlign: 'center',
+    fontFamily: 'Archivo'
   }
 });
