@@ -1,5 +1,4 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { Component } from 'react';
+import React, { useRef } from 'react';
 import { useSpring, animated } from 'react-spring';
 import { useDrag } from 'react-use-gesture';
 import {
@@ -16,87 +15,85 @@ import {
 import WeekView from '../Weekview/WeekView';
 import MonthSelect from '../MonthSelect/MonthSelect';
 
-class CalendarNav extends Component {
-  componentWillMount() {
-    this.animatedValue = new Animated.ValueXY();
-    this.panResponder = PanResponder.create({
-      // Ask to be the responder:
-      onStartShouldSetPanResponder: (evt, gestureState) => {
-        console.log('should start');
-      },
-      onStartShouldSetPanResponderCapture: (evt, gestureState) => {
-        console.log('capture');
-        this.startY = this.animatedValue.y;
-        console.log(this.startY._value);
-      },
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
-        console.log('should set');
-      },
-      onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
+const CalendarNav = () => {
+  const pan = useRef(new Animated.ValueXY()).current;
 
-      onPanResponderGrant: (evt, gestureState) => {
-        this.animatedValue.setOffset(this.animatedValue.__getValue());
-        this.animatedValue.setValue({ x: 0, y: 0 });
+  const panResponder = PanResponder.create({
+    // Ask to be the responder:
+    onStartShouldSetPanResponder: (evt, gestureState) => {
+      console.log('should start');
+    },
+    onStartShouldSetPanResponderCapture: (evt, gestureState) => {
+      console.log('capture');
+      //this.startY = pan.y;
+      //console.log(this.startY._value);
+    },
+    onMoveShouldSetPanResponder: (evt, gestureState) => {
+      console.log('should set');
+    },
+    onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
 
-        // The gesture has started. Show visual feedback so the user knows
-        // what is happening!
-        // gestureState.d{x,y} will be set to zero now
-      },
-      onPanResponderMove: (e, gs) => {
-        if (gs.moveY < 155) {
-          Animated.event([null, { dy: this.animatedValue.y }])(e, gs);
-        } else {
-          //trigger calendar animation
-        }
-      },
-      //   onPanResponderMove: Animated.event([null, { dy: this.animatedValue.y }]),
-      onPanResponderTerminationRequest: (evt, gestureState) => true,
-      onPanResponderRelease: (e, { dy }) => {
-        const startValue = 0;
-        const duration = 500;
-        // snap back animation
-        if (dy > 0 && Math.abs(dy) < 120) {
-          Animated.timing(this.animatedValue, {
-            duration,
-            toValue: startValue,
-            easing: Easing.in(Easing.elastic(1))
-          }).start();
-        } else {
-        }
-      },
-      onPanResponderTerminate: (evt, gestureState) => {
-        // Another component has become the responder, so this gesture
-        // should be cancelled
-      },
-      onShouldBlockNativeResponder: (evt, gestureState) => {
-        // Returns whether this component should block native components from becoming the JS
-        // responder. Returns true by default. Is currently only supported on android.
-        return true;
+    onPanResponderGrant: (evt, gestureState) => {
+      pan.setOffset(pan.__getValue());
+      pan.setValue({ x: 0, y: 0 });
+
+      // The gesture has started. Show visual feedback so the user knows
+      // what is happening!
+      // gestureState.d{x,y} will be set to zero now
+    },
+    onPanResponderMove: (e, gs) => {
+      Animated.event([null, { dy: pan.y }], {
+        useNativeDriver: false
+      })(e, gs);
+    },
+    //   onPanResponderMove: Animated.event([null, { dy: pan.y }]),
+    onPanResponderTerminationRequest: (evt, gestureState) => true,
+    onPanResponderRelease: (e, { dy }) => {
+      const startValue = 0;
+      const duration = 500;
+      // snap back animation
+      if (dy > 0 && Math.abs(dy) < 120) {
+        Animated.timing(pan, {
+          duration,
+          toValue: startValue,
+          easing: Easing.in(Easing.elastic(1)),
+          useNativeDriver: false
+        }).start();
+      } else {
+        //this.state.calendarViewActive = true;
       }
-    });
-  }
+    },
+    onPanResponderTerminate: (evt, gestureState) => {
+      // Another component has become the responder, so this gesture
+      // should be cancelled
+    },
+    onShouldBlockNativeResponder: (evt, gestureState) => {
+      // Returns whether this component should block native components from becoming the JS
+      // responder. Returns true by default. Is currently only supported on android.
+      return true;
+    }
+  });
 
-  render() {
-    const animatedStyle = {
-      transform: this.animatedValue.getTranslateTransform()
-    };
-    return (
-      <Animated.View
-        {...this.panResponder.panHandlers}
-        style={[styles.container, animatedStyle]}
-      >
-        <MonthSelect />
-        <WeekView />
-      </Animated.View>
-    );
-  }
-}
+  const animatedStyle = {
+    transform: pan.getTranslateTransform()
+  };
+
+  return (
+    <Animated.View
+      {...panResponder.panHandlers}
+      style={[styles.container, animatedStyle]}
+    >
+      <MonthSelect />
+      <WeekView />
+    </Animated.View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
-    flex: 3,
+    flex: 2,
     width: '100%',
     zIndex: 9999
   }
