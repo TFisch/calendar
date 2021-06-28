@@ -12,7 +12,9 @@ import {
   Button,
   SafeAreaView
 } from 'react-native';
-import WeekView from './WeekView';
+
+import WeekView from '../Weekview/WeekView';
+import MonthSelect from '../MonthSelect/MonthSelect';
 
 class CalendarNav extends Component {
   componentWillMount() {
@@ -35,24 +37,31 @@ class CalendarNav extends Component {
       onPanResponderGrant: (evt, gestureState) => {
         this.animatedValue.setOffset(this.animatedValue.__getValue());
         this.animatedValue.setValue({ x: 0, y: 0 });
+
         // The gesture has started. Show visual feedback so the user knows
         // what is happening!
         // gestureState.d{x,y} will be set to zero now
       },
-      onPanResponderMove: Animated.event([null, { dy: this.animatedValue.y }]),
+      onPanResponderMove: (e, gs) => {
+        if (gs.moveY < 155) {
+          Animated.event([null, { dy: this.animatedValue.y }])(e, gs);
+        } else {
+          //trigger calendar animation
+        }
+      },
+      //   onPanResponderMove: Animated.event([null, { dy: this.animatedValue.y }]),
       onPanResponderTerminationRequest: (evt, gestureState) => true,
       onPanResponderRelease: (e, { dy }) => {
         const startValue = 0;
         const duration = 500;
         // snap back animation
-        if (dy > 0 && Math.abs(dy) < 200) {
+        if (dy > 0 && Math.abs(dy) < 120) {
           Animated.timing(this.animatedValue, {
             duration,
             toValue: startValue,
             easing: Easing.in(Easing.elastic(1))
           }).start();
         } else {
-          //render calendar
         }
       },
       onPanResponderTerminate: (evt, gestureState) => {
@@ -76,6 +85,7 @@ class CalendarNav extends Component {
         {...this.panResponder.panHandlers}
         style={[styles.container, animatedStyle]}
       >
+        <MonthSelect />
         <WeekView />
       </Animated.View>
     );
@@ -84,10 +94,11 @@ class CalendarNav extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'pink',
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
-    height: '100',
-    width: '100%'
+    flex: 3,
+    width: '100%',
+    zIndex: 9999
   }
 });
 

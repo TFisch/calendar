@@ -11,9 +11,9 @@ export default function Nav() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: 'blue',
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
-    height: '100',
+    flex: 1,
     width: '100%'
   }
 });
