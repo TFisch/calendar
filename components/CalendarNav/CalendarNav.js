@@ -17,6 +17,7 @@ import MonthSelect from '../MonthSelect/MonthSelect';
 
 const CalendarNav = () => {
   const pan = useRef(new Animated.ValueXY()).current;
+  const grow = useRef(new Animated.Value(100)).current;
 
   const panResponder = PanResponder.create({
     // Ask to be the responder:
@@ -42,9 +43,18 @@ const CalendarNav = () => {
       // gestureState.d{x,y} will be set to zero now
     },
     onPanResponderMove: (e, gs) => {
-      Animated.event([null, { dy: pan.y }], {
-        useNativeDriver: false
-      })(e, gs);
+      Animated.parallel([
+        Animated.event([null, { dy: pan.y }], {
+          useNativeDriver: false
+        })(e, gs),
+        Animated.timing(grow, {
+          duration,
+          toValue: 300,
+          duration: 5000,
+          easing: Easing.in(Easing.elastic(1)),
+          useNativeDriver: false
+        }).start()
+      ]);
     },
     //   onPanResponderMove: Animated.event([null, { dy: pan.y }]),
     onPanResponderTerminationRequest: (evt, gestureState) => true,
@@ -59,6 +69,7 @@ const CalendarNav = () => {
           easing: Easing.in(Easing.elastic(1)),
           useNativeDriver: false
         }).start();
+        grow.stopAnimation();
       } else {
         //this.state.calendarViewActive = true;
       }
@@ -75,7 +86,8 @@ const CalendarNav = () => {
   });
 
   const animatedStyle = {
-    transform: pan.getTranslateTransform()
+    transform: pan.getTranslateTransform(),
+    height: grow
   };
 
   return (
@@ -93,7 +105,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
-    flex: 2,
+    //flex: 2,
     width: '100%',
     zIndex: 9999
   }
