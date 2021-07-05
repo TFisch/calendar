@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingLeft: '10px',
     paddingRight: '10px',
-    flex: 5
+    height: 500
   },
   weekDayBlock: {},
   weekDayCopy: {
