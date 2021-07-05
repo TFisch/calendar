@@ -14,6 +14,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
     alignItems: 'center',
     width: '100%',
-    flex: 5
+    height: 500
   }
 });

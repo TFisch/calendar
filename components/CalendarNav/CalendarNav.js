@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useSpring, animated } from 'react-spring';
 import { useDrag } from 'react-use-gesture';
 import {
@@ -16,8 +16,11 @@ import WeekView from '../Weekview/WeekView';
 import MonthSelect from '../MonthSelect/MonthSelect';
 
 const CalendarNav = () => {
+  //moving animation
+  const [isReady, setIsReady] = useState(false);
   const pan = useRef(new Animated.ValueXY()).current;
-  const grow = useRef(new Animated.Value(100)).current;
+  //growing animation
+  const grow = useRef(new Animated.Value(500)).current;
 
   const panResponder = PanResponder.create({
     // Ask to be the responder:
@@ -43,18 +46,11 @@ const CalendarNav = () => {
       // gestureState.d{x,y} will be set to zero now
     },
     onPanResponderMove: (e, gs) => {
-      Animated.parallel([
+      if (!isReady) {
         Animated.event([null, { dy: pan.y }], {
           useNativeDriver: false
-        })(e, gs),
-        Animated.timing(grow, {
-          duration,
-          toValue: 300,
-          duration: 5000,
-          easing: Easing.in(Easing.elastic(1)),
-          useNativeDriver: false
-        }).start()
-      ]);
+        })(e, gs);
+      }
     },
     //   onPanResponderMove: Animated.event([null, { dy: pan.y }]),
     onPanResponderTerminationRequest: (evt, gestureState) => true,
@@ -69,8 +65,16 @@ const CalendarNav = () => {
           easing: Easing.in(Easing.elastic(1)),
           useNativeDriver: false
         }).start();
-        grow.stopAnimation();
       } else {
+        setIsReady((current) => true);
+        Animated.timing(grow, {
+          duration,
+          toValue: 600,
+          duration: 800,
+          easing: Easing.in(Easing.elastic(1)),
+          useNativeDriver: false
+        }).start();
+        pan.stopAnimation();
         //this.state.calendarViewActive = true;
       }
     },
@@ -87,8 +91,17 @@ const CalendarNav = () => {
 
   const animatedStyle = {
     transform: pan.getTranslateTransform(),
-    height: grow
+    height: !isReady
+      ? pan.y.interpolate({
+          inputRange: [0, 500],
+          outputRange: [100, 500]
+        })
+      : grow
   };
+
+  useEffect(() => {
+    console.log(isReady);
+  }, [isReady]);
 
   return (
     <Animated.View
@@ -103,7 +116,7 @@ const CalendarNav = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: 'blue',
     alignItems: 'center',
     //flex: 2,
     width: '100%',
