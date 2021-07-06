@@ -14,10 +14,12 @@ export default ({ children }) => {
 
   let firstOfWeek;
   let lastOfWeek;
+
   if (todayNum == 1) {
     firstOfWeek = todayMoment;
   } else {
-    firstOfWeek = todayMoment.subtract(todayNum, 'd');
+    const diff = todayNum - 1;
+    firstOfWeek = todayMoment.subtract(diff, 'd');
   }
 
   lastOfWeek = firstOfWeek.clone().add(6, 'd');

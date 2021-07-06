@@ -9,7 +9,8 @@ import {
   View,
   StyleSheet,
   Button,
-  SafeAreaView
+  SafeAreaView,
+  TouchableOpacity
 } from 'react-native';
 import WeekView from '../Weekview/WeekView';
 import MonthSelect from '../MonthSelect/MonthSelect';
@@ -29,15 +30,12 @@ const CalendarNav = () => {
       //this.startY = pan.y;
       //console.log(this.startY._value);
     },
-    onMoveShouldSetPanResponder: (evt, gestureState) => {
-      console.log('should set');
-    },
+    onMoveShouldSetPanResponder: (evt, gestureState) => {},
     onMoveShouldSetPanResponderCapture: (evt, gestureState) => true,
 
     onPanResponderGrant: (evt, gestureState) => {
       pan.setOffset(pan.__getValue());
       pan.setValue({ x: 0, y: 0 });
-
       // The gesture has started. Show visual feedback so the user knows
       // what is happening!
       // gestureState.d{x,y} will be set to zero now
