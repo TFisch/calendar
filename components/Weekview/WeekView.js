@@ -1,39 +1,54 @@
+import moment from 'moment';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { CalendarContext } from '../../context/CalendarContext';
+import { days } from '../data/days';
 
 export default function WeekView() {
-  return (
-    <View style={styles.container}>
-      <View style={styles.weekDayBlock}>
-        <Text style={styles.weekDayCopy}>SUN</Text>
-        <Text style={styles.weekDateNumCopy}>1</Text>
-      </View>
-      <View style={styles.weekDayBlock}>
-        <Text style={styles.weekDayCopy}>MON</Text>
-        <Text style={styles.weekDateNumCopy}>2</Text>
-      </View>
-      <View style={styles.weekDayBlock}>
-        <Text style={styles.weekDayCopy}>TUES</Text>
-        <Text style={styles.weekDateNumCopy}>3</Text>
-      </View>
-      <View style={styles.weekDayBlock}>
-        <Text style={styles.weekDayCopy}>WED</Text>
-        <Text style={styles.weekDateNumCopy}>4</Text>
-      </View>
-      <View style={styles.weekDayBlock}>
-        <Text style={styles.weekDayCopy}>THU</Text>
-        <Text style={styles.weekDateNumCopy}>5</Text>
-      </View>
-      <View style={styles.weekDayBlock}>
-        <Text style={styles.weekDayCopy}>FRI</Text>
-        <Text style={styles.weekDateNumCopy}>6</Text>
-      </View>
-      <View style={styles.weekDayBlock}>
-        <Text style={styles.weekDayCopy}>SAT</Text>
-        <Text style={styles.weekDateNumCopy}>7</Text>
-      </View>
-    </View>
-  );
+  const { currentTime } = React.useContext(CalendarContext);
+  const firstDate = JSON.parse(currentTime.firstOfWeek.format('D'));
+  const activeDate = currentTime.activeDate[0].isoWeekday();
+  const setActiveDate = currentTime.activeDate[1];
+  const currentMonth = currentTime.currentMonth;
+  const currentYear = currentTime.currentYear;
+  const daysToRender = [];
+
+  for (let i = 1; i <= 7; i++) {
+    const isActiveDay = activeDate === i;
+    const displayDate = i === 1 ? firstDate : firstDate + i - 1;
+
+    const concatDate =
+      currentMonth.toString() +
+      '-' +
+      displayDate.toString() +
+      '-' +
+      currentYear.toString();
+
+    if (isActiveDay) {
+      daysToRender.push(
+        <View style={styles.weekDayBlock} key={'day' + i}>
+          <Text style={styles.weekDayCopy}>{days[i - 1].abbrev}</Text>
+          <Text style={styles.activeWeekDateNumCopy}>{displayDate}</Text>
+        </View>
+      );
+    } else {
+      daysToRender.push(
+        <View style={styles.weekDayBlock} key={'day' + i}>
+          <Text style={styles.weekDayCopy}>{days[i - 1].abbrev}</Text>
+          <Text
+            style={styles.weekDateNumCopy}
+            onPress={() => {
+              setActiveDate(moment(concatDate, 'MM-DD-YYYY'));
+            }}
+          >
+            {displayDate}
+          </Text>
+        </View>
+      );
+    }
+  }
+
+  return <View style={styles.container}>{daysToRender}</View>;
 }
 
 const styles = StyleSheet.create({
@@ -54,5 +69,10 @@ const styles = StyleSheet.create({
   weekDateNumCopy: {
     textAlign: 'center',
     fontFamily: 'Archivo'
+  },
+  activeWeekDateNumCopy: {
+    textAlign: 'center',
+    fontFamily: 'Archivo',
+    color: 'yellow'
   }
 });

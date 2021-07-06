@@ -11,9 +11,9 @@ import {
   Button,
   SafeAreaView
 } from 'react-native';
-
 import WeekView from '../Weekview/WeekView';
 import MonthSelect from '../MonthSelect/MonthSelect';
+import { CalendarContext } from '../../context/CalendarContext';
 
 const CalendarNav = () => {
   //moving animation
@@ -24,11 +24,8 @@ const CalendarNav = () => {
 
   const panResponder = PanResponder.create({
     // Ask to be the responder:
-    onStartShouldSetPanResponder: (evt, gestureState) => {
-      console.log('should start');
-    },
+    onStartShouldSetPanResponder: (evt, gestureState) => {},
     onStartShouldSetPanResponderCapture: (evt, gestureState) => {
-      console.log('capture');
       //this.startY = pan.y;
       //console.log(this.startY._value);
     },
@@ -99,9 +96,7 @@ const CalendarNav = () => {
       : grow
   };
 
-  useEffect(() => {
-    console.log(isReady);
-  }, [isReady]);
+  useEffect(() => {}, [isReady]);
 
   return (
     <Animated.View
@@ -118,7 +113,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'blue',
     alignItems: 'center',
-    //flex: 2,
     width: '100%',
     zIndex: 9999
   }
