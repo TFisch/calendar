@@ -6,6 +6,7 @@ import Nav from './components/Nav/Nav';
 import { useFonts } from 'expo-font';
 import * as Font from 'expo-font';
 const { height } = Dimensions.get('window');
+import CalendarContext from './context/CalendarContext';
 
 let customFonts = {
   'Public Sans': require('./assets/fonts/PublicSans-Regular.ttf'),
@@ -17,7 +18,6 @@ export default class App extends React.Component {
   state = {
     fontsLoaded: false
   };
-
   async _loadFontsAsync() {
     await Font.loadAsync(customFonts);
     this.setState({ fontsLoaded: true });
@@ -31,9 +31,11 @@ export default class App extends React.Component {
     if (this.state.fontsLoaded) {
       return (
         <View style={styles.container}>
-          <Nav />
-          <CalendarNav />
-          <Calendar />
+          <CalendarContext>
+            <Nav />
+            <CalendarNav />
+            <Calendar />
+          </CalendarContext>
         </View>
       );
     } else {
