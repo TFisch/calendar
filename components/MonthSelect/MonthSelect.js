@@ -11,6 +11,8 @@ export default function MonthSelect() {
 
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
+    top: '-8px',
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
