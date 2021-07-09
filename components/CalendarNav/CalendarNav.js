@@ -20,6 +20,8 @@ const CalendarNav = () => {
   //moving animation
   const [isReady, setIsReady] = useState(false);
   const pan = useRef(new Animated.ValueXY()).current;
+  const panBack = useRef(new Animated.ValueXY()).current;
+
   //growing animation
   const grow = useRef(new Animated.Value(500)).current;
 
@@ -62,14 +64,22 @@ const CalendarNav = () => {
         }).start();
       } else {
         setIsReady((current) => true);
-        Animated.timing(grow, {
-          duration,
-          toValue: 600,
-          duration: 800,
-          easing: Easing.in(Easing.elastic(1)),
-          useNativeDriver: false
-        }).start();
         pan.stopAnimation();
+        Animated.parallel([
+          Animated.timing(panBack, {
+            duration: 800,
+            toValue: 0,
+            easing: Easing.in(Easing.elastic(1)),
+            useNativeDriver: false
+          }).start(),
+          Animated.timing(grow, {
+            duration,
+            toValue: 600,
+            duration: 800,
+            easing: Easing.in(Easing.elastic(1)),
+            useNativeDriver: false
+          }).start()
+        ]);
         //this.state.calendarViewActive = true;
       }
     },
@@ -85,11 +95,13 @@ const CalendarNav = () => {
   });
 
   const animatedStyle = {
-    transform: pan.getTranslateTransform(),
+    transform: !isReady
+      ? pan.getTranslateTransform()
+      : panBack.getTranslateTransform(),
     height: !isReady
       ? pan.y.interpolate({
           inputRange: [0, 500],
-          outputRange: [100, 500]
+          outputRange: ['15%', '100%']
         })
       : grow
   };
